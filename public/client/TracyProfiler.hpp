@@ -345,6 +345,42 @@ public:
         TracyLfqCommit;
     }
 
+    static tracy_force_inline void PlotData(const char* name, int64_t val, int64_t time)
+    {
+#ifdef TRACY_ON_DEMAND
+        if (!GetProfiler().IsConnected()) return;
+#endif
+        TracyLfqPrepare(QueueType::PlotDataInt);
+        MemWrite(&item->plotDataInt.name, (uint64_t)name);
+        MemWrite(&item->plotDataInt.time, time);
+        MemWrite(&item->plotDataInt.val, val);
+        TracyLfqCommit;
+    }
+
+    static tracy_force_inline void PlotData(const char* name, float val, int64_t time)
+    {
+#ifdef TRACY_ON_DEMAND
+        if (!GetProfiler().IsConnected()) return;
+#endif
+        TracyLfqPrepare(QueueType::PlotDataFloat);
+        MemWrite(&item->plotDataFloat.name, (uint64_t)name);
+        MemWrite(&item->plotDataFloat.time, time);
+        MemWrite(&item->plotDataFloat.val, val);
+        TracyLfqCommit;
+    }
+
+    static tracy_force_inline void PlotData(const char* name, double val, int64_t time)
+    {
+#ifdef TRACY_ON_DEMAND
+        if (!GetProfiler().IsConnected()) return;
+#endif
+        TracyLfqPrepare(QueueType::PlotDataDouble);
+        MemWrite(&item->plotDataDouble.name, (uint64_t)name);
+        MemWrite(&item->plotDataDouble.time, time);
+        MemWrite(&item->plotDataDouble.val, val);
+        TracyLfqCommit;
+    }
+
     static tracy_force_inline void ConfigurePlot( const char* name, PlotFormatType type, bool step, bool fill, uint32_t color )
     {
         TracyLfqPrepare( QueueType::PlotConfig );
