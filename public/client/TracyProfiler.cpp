@@ -335,7 +335,7 @@ static bool CheckHardwareSupportsInvariantTSC()
     CpuId( regs, 1 );
     if( !( regs[3] & ( 1 << 4 ) ) )
     {
-#if !defined TRACY_TIMER_QPC && !defined TRACY_TIMER_FALLBACK
+#if !(defined TRACY_TIMER_QPC || defined TRACY_TIMER_FT) && !defined TRACY_TIMER_FALLBACK
         InitFailure( "CPU doesn't support RDTSC instruction." );
 #else
         return false;
@@ -357,7 +357,7 @@ bool HardwareSupportsInvariantTSC()
 
 static int64_t SetupHwTimer()
 {
-#if !defined TRACY_TIMER_QPC && !defined TRACY_TIMER_FALLBACK
+#if !(defined TRACY_TIMER_QPC || defined TRACY_TIMER_FT) && !defined TRACY_TIMER_FALLBACK
     if( !CheckHardwareSupportsInvariantTSC() )
     {
 #if defined _WIN32
@@ -3516,7 +3516,7 @@ void Profiler::CalibrateTimer()
 
 #ifdef TRACY_HW_TIMER
 
-#  if !defined TRACY_TIMER_QPC && defined TRACY_TIMER_FALLBACK
+#  if !(defined TRACY_TIMER_QPC || defined TRACY_TIMER_FT) && defined TRACY_TIMER_FALLBACK
     const bool needCalibration = HardwareSupportsInvariantTSC();
 #  else
     const bool needCalibration = true;
@@ -3924,6 +3924,18 @@ int64_t Profiler::GetTimeQpc()
     LARGE_INTEGER t;
     QueryPerformanceCounter( &t );
     return t.QuadPart;
+}
+#endif
+
+#if defined _WIN32 && defined TRACY_TIMER_FT
+int64_t Profiler::GetTimeFt()
+{
+    FILETIME f;
+    GetSystemTimePreciseAsFileTime(&f);
+    ULARGE_INTEGER tv;
+    tv.LowPart = f.dwLowDateTime;
+    tv.HighPart = f.dwHighDateTime;
+    return tv.QuadPart;
 }
 #endif
 

@@ -242,7 +242,7 @@ static void SetupVsync()
     memset( s_propVsync, 0, sizeof( EVENT_TRACE_PROPERTIES ) );
     s_propVsync->LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
     s_propVsync->Wnode.BufferSize = psz;
-#ifdef TRACY_TIMER_QPC
+#if defined TRACY_TIMER_QPC || defined TRACY_TIMER_FT
     s_propVsync->Wnode.ClientContext = 1;
 #else
     s_propVsync->Wnode.ClientContext = 3;
@@ -376,7 +376,7 @@ bool SysTraceStart( int64_t& samplingPeriod )
     s_prop->LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
     s_prop->Wnode.BufferSize = psz;
     s_prop->Wnode.Flags = WNODE_FLAG_TRACED_GUID;
-#ifdef TRACY_TIMER_QPC
+#if defined TRACY_TIMER_QPC || defined TRACY_TIMER_FT
     s_prop->Wnode.ClientContext = 1;
 #else
     s_prop->Wnode.ClientContext = 3;

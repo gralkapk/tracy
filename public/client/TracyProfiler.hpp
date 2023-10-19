@@ -193,8 +193,10 @@ public:
 #  if defined TARGET_OS_IOS && TARGET_OS_IOS == 1
         if( HardwareSupportsInvariantTSC() ) return mach_absolute_time();
 #  elif defined _WIN32
-#    ifdef TRACY_TIMER_QPC
+#    if defined TRACY_TIMER_QPC
         return GetTimeQpc();
+#    elif defined TRACY_TIMER_FT
+        return GetTimeFt();
 #    else
         if( HardwareSupportsInvariantTSC() ) return int64_t( __rdtsc() );
 #    endif
@@ -926,6 +928,10 @@ private:
 
 #if defined _WIN32 && defined TRACY_TIMER_QPC
     static int64_t GetTimeQpc();
+#endif
+
+#if defined _WIN32 && defined TRACY_TIMER_FT
+    static int64_t GetTimeFt();
 #endif
 
     double m_timerMul;

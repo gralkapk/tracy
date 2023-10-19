@@ -76,6 +76,7 @@ set_option(TRACY_FIBERS "Enable fibers support" OFF)
 set_option(TRACY_NO_CRASH_HANDLER "Disable crash handling" OFF)
 set_option(TRACY_TIMER_FALLBACK "Use lower resolution timers" OFF)
 set_option(TRACY_TIMER_QPC "Use QPC timer" OFF)
+set_option(TRACY_TIMER_FT "Use Filetime timer" OFF)
 
 if(NOT TRACY_STATIC)
     target_compile_definitions(TracyClient PRIVATE TRACY_EXPORTS)
